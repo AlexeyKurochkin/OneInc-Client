@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
 
-const InputForm = () => {
+const InputForm = ({
+  isEncoding,
+  onSubmit,
+  onCancel,
+}: {
+  isEncoding: boolean;
+  onSubmit: (value: string) => void;
+  onCancel: () => void;
+}) => {
   const [stringToIncode, setStringToIncode] = useState("");
-  const [encoding, setEncoding] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     console.log(stringToIncode);
     setStringToIncode("");
-    setEncoding(true);
-    event.preventDefault();
+    onSubmit(stringToIncode);
   };
 
   return (
@@ -38,16 +45,16 @@ const InputForm = () => {
           label="Enter encoding string..."
           name="stringToIncode"
           autoFocus
-          disabled={encoding}
+          disabled={isEncoding}
           value={stringToIncode}
           onChange={(e) => setStringToIncode(e.target.value)}
         />
-        {encoding ? (
+        {isEncoding ? (
           <Button
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            onClick={() => setEncoding(false)}
+            onClick={() => onCancel()}
           >
             Cancel
           </Button>

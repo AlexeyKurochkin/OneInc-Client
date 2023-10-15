@@ -1,10 +1,10 @@
-import InputForm from "./Components/InputForm/InputForm";
 import { Container } from "@mui/material";
+import Encoder from "./Components/Encoder/Encoder";
 
 function App() {
   return (
     <Container component="main" maxWidth="md">
-      <InputForm />
+      <Encoder />
     </Container>
   );
 }

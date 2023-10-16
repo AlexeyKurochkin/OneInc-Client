@@ -4,16 +4,18 @@ import InputForm from "../InputForm/InputForm";
 import EncodedStringRenderer from "../EncodedStringRenderer/EncodedStringRenderer";
 import useSignalR from "../../hooks/useSignalR";
 import { signalRHubUrl } from "../../configuration/config";
+import { ISubscription, HubConnectionState } from "@microsoft/signalr";
 
 const Encoder = () => {
   const { connection } = useSignalR(signalRHubUrl);
   const [isEncoding, setIsEncoding] = useState(false);
-  const [encodedValue, setEncodedValue] = useState("");
-  const [subscription, setSubscription] = useState(null);
+  const [encodedValue, setEncodedValue] = useState<string>("");
+  const [subscription, setSubscription] =
+    useState<ISubscription<string> | null>(null);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-  const tryStartEncodingStream = async (message) => {
-    if (connection && connection._connectionStarted) {
+  const tryStartEncodingStream = async (message: string) => {
+    if (connection && connection.state === HubConnectionState.Connected) {
       setIsEncoding(true);
       setEncodedValue("");
       setSnackBarOpen(true);
@@ -27,7 +29,7 @@ const Encoder = () => {
             complete: () => {
               handleEncodingFinished();
             },
-            error: (error) => {
+            error: () => {
               handleEncodingError();
             },
           });
@@ -40,7 +42,7 @@ const Encoder = () => {
     }
   };
 
-  const handleReceiveSymbol = (symbol) => {
+  const handleReceiveSymbol = (symbol: string) => {
     console.log(`Received symbol: ${symbol}`);
     setEncodedValue((existingValues) => existingValues + symbol);
   };

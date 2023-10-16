@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: PRODUCTION_IMAGE
+    ports:
+      - 5173:8080
+    environment:
+      - REACT_APP_SIGNALR_HUB_URL=https://localhost:32771/hubs/encodingHub
+      # Swap url if you have not generated ssl certificate
+      # - REACT_APP_SIGNALR_HUB_URL=http://localhost:32770/hubs/encodingHub

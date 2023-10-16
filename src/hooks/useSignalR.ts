@@ -1,8 +1,20 @@
 import { useState, useEffect } from "react";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
-export default function useSignalR(hubUrl) {
-  const [connection, setConnection] = useState(null);
+interface SignalRHook {
+  connection: HubConnection | null;
+  addEventHandler: (
+    eventName: string,
+    handler: (...args: unknown[]) => void
+  ) => void;
+  removeEventHandler: (
+    eventName: string,
+    handler: (...args: unknown[]) => void
+  ) => void;
+}
+
+export default function useSignalR(hubUrl: string): SignalRHook {
+  const [connection, setConnection] = useState<HubConnection | null>(null);
 
   useEffect(() => {
     console.log("creating new HubConnectionBuilder");
@@ -28,20 +40,26 @@ export default function useSignalR(hubUrl) {
     if (connection) {
       connection
         .start()
-        .then((result) => {
+        .then(() => {
           console.log("Connected!");
         })
         .catch((e) => console.log("Connection failed: ", e));
     }
   }, [connection]);
 
-  const addEventHandler = (eventName, handler) => {
+  const addEventHandler = (
+    eventName: string,
+    handler: (...args: unknown[]) => void
+  ) => {
     if (connection) {
       connection.on(eventName, handler);
     }
   };
 
-  const removeEventHandler = (eventName, handler) => {
+  const removeEventHandler = (
+    eventName: string,
+    handler: (...args: unknown[]) => void
+  ) => {
     if (connection) {
       connection.off(eventName, handler);
     }

@@ -3,9 +3,10 @@ import { Container, Snackbar, Alert, Slide } from "@mui/material";
 import InputForm from "../InputForm/InputForm";
 import EncodedStringRenderer from "../EncodedStringRenderer/EncodedStringRenderer";
 import useSignalR from "../../hooks/useSignalR";
+import { signalRHubUrl } from "../../configuration/config";
 
 const Encoder = () => {
-  const { connection } = useSignalR("https://localhost:32771/hubs/encodingHub");
+  const { connection } = useSignalR(signalRHubUrl);
   const [isEncoding, setIsEncoding] = useState(false);
   const [encodedValue, setEncodedValue] = useState("");
   const [subscription, setSubscription] = useState(null);

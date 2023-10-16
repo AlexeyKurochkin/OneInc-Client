@@ -11,8 +11,11 @@ const Encoder = () => {
   const [subscription, setSubscription] = useState(null);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-  const startEncodingStream = async (message) => {
+  const tryStartEncodingStream = async (message) => {
     if (connection && connection._connectionStarted) {
+      setIsEncoding(true);
+      setEncodedValue("");
+      setSnackBarOpen(true);
       try {
         const newSubscription = await connection
           .stream("StartEncodingStream", message)
@@ -31,6 +34,8 @@ const Encoder = () => {
       } catch (error) {
         console.log(error);
       }
+    } else {
+      setSnackBarOpen(true);
     }
   };
 
@@ -54,10 +59,7 @@ const Encoder = () => {
       <InputForm
         isEncoding={isEncoding}
         onSubmit={(value) => {
-          setIsEncoding(true);
-          setEncodedValue("");
-          setSnackBarOpen(true);
-          startEncodingStream(value);
+          tryStartEncodingStream(value);
         }}
         onCancel={() => {
           console.log("canceled");

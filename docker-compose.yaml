@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: PRODUCTION_IMAGE
-    ports:
-      - 5174:8080
+    networks:
+      - mynetwork
     environment:
       - REACT_APP_SIGNALR_HUB_URL=https://localhost:32771/hubs/encodingHub
       # Swap url if you have not generated ssl certificate
@@ -16,5 +16,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-nginx
+    networks:
+      - mynetwork
     ports:
       - 5173:80
+
+networks:
+  mynetwork:
